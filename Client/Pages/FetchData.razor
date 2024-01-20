@@ -2,13 +2,11 @@
 @using ECommerceWeb.Shared
 @inject HttpClient Http
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Categorias</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>Categorias</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+@if (categorias == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -17,20 +15,18 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Comentarios</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var item in categorias)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@item.Id</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Comentarios</td>
                 </tr>
             }
         </tbody>
@@ -38,10 +34,10 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private CategoriaDto[]? categorias;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        categorias = await Http.GetFromJsonAsync<CategoriaDto[]>("api/categorias");
     }
 }

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\ECommerceWeb.Client.csproj" />
     <ProjectReference Include="..\Shared\ECommerceWeb.Shared.csproj" />
+    <ProjectReference Include="..\ECommerceWeb.Repositories\ECommerceWeb.Repositories.csproj" />
   </ItemGroup>
 
 

@@ -1,11 +1,13 @@
+using ECommerceWeb.Repositories.Implementaciones;
+using ECommerceWeb.Repositories.Interfaces;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+builder.Services.AddControllers();
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 
 var app = builder.Build();
 
@@ -29,7 +31,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
