@@ -1,6 +1,7 @@
+using ECommerceWeb.DataAccess.Data;
 using ECommerceWeb.Repositories.Implementaciones;
 using ECommerceWeb.Repositories.Interfaces;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+
+builder.Services.AddDbContext<ECommerceDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
+});
 
 var app = builder.Build();
 
