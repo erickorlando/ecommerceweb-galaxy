@@ -1,38 +1,58 @@
-﻿using System.Linq.Expressions;
+﻿using ECommerceWeb.DataAccess.Data;
 using ECommerceWeb.Entities;
 using ECommerceWeb.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ECommerceWeb.Repositories.Implementaciones;
 
 public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
-    public Task<ICollection<TEntity>> ListAsync()
+    protected readonly ECommerceDbContext Context;
+
+    protected RepositoryBase(ECommerceDbContext context)
     {
-        throw new NotImplementedException();
+        Context = context;
     }
 
-    public Task<ICollection<TEntity>> ListAsync(Expression<Func<TEntity, bool>> predicate)
+    public async Task<ICollection<TEntity>> ListAsync()
     {
-        throw new NotImplementedException();
+        return await Context.Set<TEntity>()
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public Task<TEntity?> FindAsync(int id)
+    public async Task<ICollection<TEntity>> ListAsync(Expression<Func<TEntity, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await Context.Set<TEntity>()
+            .Where(predicate)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public Task AddAsync(TEntity entity)
+    public async Task<TEntity?> FindAsync(int id)
     {
-        throw new NotImplementedException();
+        return await Context.Set<TEntity>().FindAsync(id);
     }
 
-    public Task UpdateAsync()
+    public async Task AddAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        await Context.Set<TEntity>().AddAsync(entity);
+        await Context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int id)
+    public async Task UpdateAsync()
     {
-        throw new NotImplementedException();
+        await Context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var registro = await FindAsync(id);
+        if (registro is not null)
+        {
+            registro.Estado = false;
+            await UpdateAsync();
+        }
     }
 }

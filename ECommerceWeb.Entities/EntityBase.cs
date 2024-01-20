@@ -5,7 +5,7 @@ public class EntityBase
 
     public bool Estado { get; set; }
 
-    public EntityBase()
+    protected EntityBase()
     {
         Estado = true;
     }

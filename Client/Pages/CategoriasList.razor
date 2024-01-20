@@ -1,0 +1,59 @@
+﻿@page "/categorias/list"
+@using ECommerceWeb.Shared
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Categorias</PageTitle>
+
+<h1>Categorias</h1>
+
+<a class="btn btn-primary" href="categorias/crear">Nuevo</a>
+
+<hr/>
+
+
+
+@if (_categorias == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Comentarios</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _categorias)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Comentarios</td>
+                    <td>
+                        <button class="btn btn-secondary" @onclick="() => Editar(item.Id)">Editar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CategoriaDto[]? _categorias;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _categorias = await Http.GetFromJsonAsync<CategoriaDto[]>("api/categorias");
+    }
+
+    private void Editar(int id)
+    {
+        NavigationManager.NavigateTo($"categorias/editar/{id}");
+    }
+}

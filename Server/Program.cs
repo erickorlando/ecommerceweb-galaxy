@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<IMarcaRepository, MarcaRepository>();
 
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
