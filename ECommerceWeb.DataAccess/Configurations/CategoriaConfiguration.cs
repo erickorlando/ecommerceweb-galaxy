@@ -13,5 +13,14 @@ public class CategoriaConfiguration : IEntityTypeConfiguration<Categoria>
 
         builder.Property(p => p.Comentarios)
             .HasMaxLength(500);
+
+        var lista = new List<Categoria>
+        {
+            new() { Id = 1, Nombre = "Celulares" },
+            new() { Id = 2, Nombre = "Televisores" },
+            new() { Id = 3, Nombre = "Computadoras" }
+        };
+
+        builder.HasData(lista);
     }
 }

@@ -4,6 +4,7 @@ using ECommerceWeb.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWeb.DataAccess.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
-    partial class ECommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240120181238_SegundaMigracion")]
+    partial class SegundaMigracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,26 +48,6 @@ namespace ECommerceWeb.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categoria");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Estado = true,
-                            Nombre = "Celulares"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Estado = true,
-                            Nombre = "Televisores"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Estado = true,
-                            Nombre = "Computadoras"
-                        });
                 });
 
             modelBuilder.Entity("ECommerceWeb.Entities.Cliente", b =>
