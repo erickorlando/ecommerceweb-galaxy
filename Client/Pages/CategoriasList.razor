@@ -18,9 +18,9 @@
 }
 else
 {
-    <table class="table">
+    <table class="table table-bordered table-hover">
         <thead>
-            <tr>
+            <tr class="table-primary">
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Comentarios</th>
@@ -35,8 +35,8 @@ else
                     <td>@item.Nombre</td>
                     <td>@item.Comentarios</td>
                     <td>
-                        <button class="btn btn-secondary" @onclick="() => Editar(item.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)">Eliminar</button>
+                        <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="oi oi-pencil"></i></button>
+                        <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="oi oi-trash"></i></button>
                     </td>
                 </tr>
             }
