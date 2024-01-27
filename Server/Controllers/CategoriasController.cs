@@ -60,4 +60,12 @@ public class CategoriasController : ControllerBase
         await _repository.UpdateAsync();
         return Ok();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _repository.DeleteAsync(id);
+
+        return Ok();
+    }
 }

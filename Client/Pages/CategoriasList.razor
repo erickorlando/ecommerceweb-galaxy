@@ -1,5 +1,4 @@
 ﻿@page "/categorias/list"
-@using ECommerceWeb.Shared
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -37,6 +36,7 @@ else
                     <td>@item.Comentarios</td>
                     <td>
                         <button class="btn btn-secondary" @onclick="() => Editar(item.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -49,11 +49,22 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
         _categorias = await Http.GetFromJsonAsync<CategoriaDto[]>("api/categorias");
     }
 
     private void Editar(int id)
     {
         NavigationManager.NavigateTo($"categorias/editar/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await Http.DeleteAsync($"api/Categorias/{id}");
+        await Cargar();
     }
 }

@@ -13,7 +13,7 @@ namespace ECommerceWeb.DataAccess.Migrations
 {
     [DbContext(typeof(ECommerceDbContext))]
     [Migration("20240120181658_terceramigracion")]
-    partial class terceramigracion
+    partial class TerceraMigracion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

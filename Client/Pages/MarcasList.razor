@@ -1,0 +1,45 @@
+﻿@page "/marcas/list"
+@inject HttpClient Http
+
+<h1>Marcas</h1>
+
+@if (Marcas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Marcas)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    public ICollection<MarcaDto>? Marcas { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private async Task Cargar()
+    {
+        Marcas = await Http.GetFromJsonAsync<MarcaDto[]>("api/marcas");
+    }
+
+}

@@ -1,0 +1,77 @@
+﻿@page "/productos/list"
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>Productos</h1>
+
+<a class="btn btn-primary" href="productos/crear">Nuevo</a>
+
+<hr />
+
+@if (Productos is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+  
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Precio Unitario</th>
+                <th>Marca</th>
+                <th>Categoria</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Productos)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.PrecioUnitario</td>
+                        <td>@item.Marca</td>
+                        <td>@item.Categoria</td>
+                        <td>
+                            <button class="btn btn-secondary" @onclick="() => Editar(item.Id)"><i class="oi oi-pencil"></i></button>
+                            <button class="btn btn-danger" @onclick="() => Eliminar(item.Id)"><i class="oi oi-trash"></i></button>  
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+}
+
+@code {
+
+    public ICollection<ProductoDtoResponse>? Productos { get; set; }
+
+    private async Task Cargar()
+    {
+        Productos = await Http.GetFromJsonAsync<ICollection<ProductoDtoResponse>>("api/Productos");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private void Editar(int id)
+    {
+        NavigationManager.NavigateTo($"productos/edit/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        await Http.DeleteAsync($"api/Productos/{id}");
+        await Cargar();
+    }
+
+}

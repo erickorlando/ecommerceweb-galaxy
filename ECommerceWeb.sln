@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWeb.Entities", "EC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWeb.Repositories", "ECommerceWeb.Repositories\ECommerceWeb.Repositories.csproj", "{FFD9EC3D-7054-4719-B5A5-FB6A7005CB35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceWeb.DataAccess", "ECommerceWeb.DataAccess\ECommerceWeb.DataAccess.csproj", "{3E4489A1-DA1A-4387-B2AF-5E5BB9198711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerceWeb.DataAccess", "ECommerceWeb.DataAccess\ECommerceWeb.DataAccess.csproj", "{3E4489A1-DA1A-4387-B2AF-5E5BB9198711}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

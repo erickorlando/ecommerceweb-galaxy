@@ -1,0 +1,88 @@
+﻿<h3>@Titulo</h3>
+
+<EditForm Model="Request" OnValidSubmit="Grabar">
+    <DataAnnotationsValidator />
+    <div class="row row-cols-md-3">
+        <div class="col">
+            <div class="mb-3 row">
+                <label class="form-label" for="nombre">Nombre:</label>
+                <input type="text" id="nombre" class="form-control" @bind-value="Request.Nombre" />
+                <ValidationMessage For="() => Request.Nombre" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label" for="descripcion">Descripción:</label>
+                <input type="text" id="descripcion" class="form-control" @bind-value="Request.Descripcion" />
+                <ValidationMessage For="() => Request.Descripcion" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label" for="preciounitario">Precio Unitario:</label>
+                <InputNumber id="preciounitario" class="form-control" @bind-Value="Request.PrecioUnitario" />
+                <ValidationMessage For="() => Request.PrecioUnitario" />
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label" for="categoria">Categoría:</label>
+                <InputSelect id="categoria" @bind-Value="Request.CategoriaId" class="form-select">
+                    <option value="0">Seleccione una categoría</option>
+                    @foreach (var item in Categorias)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-3 row">
+                <label class="form-label" for="marca">Marca:</label>
+                <InputSelect id="marca" @bind-Value="Request.MarcaId" class="form-select">
+                    <option value="0">Seleccione una Marca</option>
+                    @foreach (var item in Marcas)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-md-3">
+        <div class="col">
+            <button type="submit" class="btn btn-primary w-25"><i class="oi oi-plus"></i>@TextoBoton</button>
+        </div>
+        <div class="col">
+            <button type="reset" class="btn btn-danger"><i class="oi oi-trash"></i>Limpiar</button>
+        </div>
+    </div>
+
+
+    <ValidationSummary />
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public ProductoDtoRequest Request { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnGrabar { get; set; }
+
+    [Parameter]
+    public string Titulo { get; set; } = string.Empty;
+
+    [Parameter]
+    public ICollection<CategoriaDto> Categorias { get; set; } = new List<CategoriaDto>();
+
+    [Parameter]
+    public ICollection<MarcaDto> Marcas { get; set; } = new List<MarcaDto>();
+
+    public string TextoBoton { get; set; } = "Crear";
+
+    private void Grabar()
+    {
+        OnGrabar.InvokeAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        TextoBoton = Request.Id == 0 ? "Crear" : "Actualizar";
+    }
+
+}

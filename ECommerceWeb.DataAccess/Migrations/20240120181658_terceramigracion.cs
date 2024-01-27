@@ -7,7 +7,7 @@
 namespace ECommerceWeb.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class terceramigracion : Migration
+    public partial class TerceraMigracion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
