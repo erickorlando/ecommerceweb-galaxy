@@ -4,8 +4,22 @@
 @inject NavigationManager NavigationManager
 
 <h1>Productos</h1>
-
 <a class="btn btn-primary" href="productos/crear">Nuevo</a>
+
+<div class="row mb-5 mt-4 justify-content-start align-items-baseline">
+    <div class="col-1">
+        <label class="form-label" for="filtro">Nombre:</label>
+    </div>
+    <div class="col-8">
+        <div class="input-group">
+            <input type="text" class="form-control" @bind-value="Filtro" id="filtro"/>
+            <span class="input-group-text" style="cursor: pointer" @onclick="() => Filtro = string.Empty"><i class="oi oi-delete"></i></span>
+        </div>
+    </div>
+    <div class="col-sm">
+        <button type="button" class="btn btn-outline-primary" @onclick="Cargar"><i class="oi oi-zoom-in"></i></button>
+    </div>
+</div>
 
 <hr />
 
@@ -16,9 +30,9 @@
 else
 {
   
-        <table class="table">
+        <table class="table table-bordered table-hover">
             <thead>
-            <tr>
+            <tr class="table-primary">
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripcion</th>
@@ -53,9 +67,11 @@ else
 
     public ICollection<ProductoDtoResponse>? Productos { get; set; }
 
+    private string Filtro { get; set; } = default!;
+
     private async Task Cargar()
     {
-        Productos = await Http.GetFromJsonAsync<ICollection<ProductoDtoResponse>>("api/Productos");
+        Productos = await Http.GetFromJsonAsync<ICollection<ProductoDtoResponse>>($"api/Productos?filtro={Filtro}");
     }
 
     protected override async Task OnInitializedAsync()

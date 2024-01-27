@@ -16,10 +16,12 @@ public class ProductosController : ControllerBase
         _repository = repository;
     }
 
+    // GET: api/productos
+    // GET: api/productos?filtro=string
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(string? filtro)
     {
-        return Ok(await _repository.ListarAsync());
+        return Ok(await _repository.ListarAsync(filtro));
     }
 
     [HttpGet("{id:int}")]
