@@ -1,12 +1,14 @@
 using ECommerceWeb.Entities;
 using ECommerceWeb.Repositories.Interfaces;
 using ECommerceWeb.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceWeb.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CategoriasController : ControllerBase
 {
     private readonly ICategoriaRepository _repository;
