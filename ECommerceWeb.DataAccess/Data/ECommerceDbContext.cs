@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceWeb.DataAccess.Data;
 
-public class ECommerceDbContext : DbContext
+public class ECommerceDbContext : IdentityDbContext<IdentityUserECommerce>
 {
     public ECommerceDbContext(DbContextOptions<ECommerceDbContext> options)
         :base(options)

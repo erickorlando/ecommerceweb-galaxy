@@ -1,9 +1,11 @@
 using System.Text;
+using ECommerceWeb.DataAccess;
 using ECommerceWeb.DataAccess.Data;
 using ECommerceWeb.Repositories.Implementaciones;
 using ECommerceWeb.Repositories.Interfaces;
 using ECommerceWeb.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,6 +24,20 @@ builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDb"));
 });
+
+// Configuramos ASP.NET Identity Core
+builder.Services.AddIdentity<IdentityUserECommerce, IdentityRole>(policies =>
+    {
+        policies.Password.RequireDigit = false;
+        policies.Password.RequireLowercase = true;
+        policies.Password.RequireUppercase = true;
+        policies.Password.RequireNonAlphanumeric = false;
+        policies.Password.RequiredLength = 8;
+
+        policies.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<ECommerceDbContext>()
+    .AddDefaultTokenProviders();
 
 // Configuramos el contexto de seguridad del API
 builder.Services.AddAuthentication(x =>
@@ -72,5 +88,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+using (var scope = app.Services.CreateScope())
+{
+    await UserDataSeeder.Seed(scope.ServiceProvider);
+}
 
 app.Run();

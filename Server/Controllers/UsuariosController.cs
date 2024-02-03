@@ -19,13 +19,7 @@ public class UsuariosController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDtoRequest request)
     {
         var response = await _service.LoginAsync(request);
-        if (string.IsNullOrEmpty(response.Token))
-        {
-            return Unauthorized();
-        }
-        else
-        {
-            return Ok(response);
-        }
+
+        return response.Exito ? Ok(response) : Unauthorized(response);
     }
 }
