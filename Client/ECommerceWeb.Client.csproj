@@ -24,11 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Auth\Register.razor" />
     <_ContentIncludedByDefault Remove="Pages\ProductoNew.razor" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Auth\" />
+    <UpToDateCheckInput Remove="Pages\Auth\Register.razor" />
   </ItemGroup>
 
 </Project>
