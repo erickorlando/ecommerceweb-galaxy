@@ -3,6 +3,7 @@
 @inject HttpClient HttpClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IToastService ToastService
 
 <div class="container">
     <div class="row justify-content-center">
@@ -16,13 +17,13 @@
                         <DataAnnotationsValidator />
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="usuario" @bind-value="LoginDtoRequest.Usuario"
-                                   placeholder="usuario" autocomplete="true"/>
+                                   placeholder="usuario" autocomplete="true" />
                             <label for="usuario">Usuario</label>
                             <ValidationMessage For="() => LoginDtoRequest.Usuario" />
                         </div>
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="password" @bind-value="LoginDtoRequest.Password"
-                                   placeholder="clave" autocomplete="true"/>
+                                   placeholder="clave" autocomplete="true" />
                             <label for="usuario">Clave</label>
                             <ValidationMessage For="() => LoginDtoRequest.Password" />
                         </div>
@@ -46,23 +47,24 @@
         {
             var response = await HttpClient.PostAsJsonAsync("api/Usuarios/Login", LoginDtoRequest);
 
-            if (response.IsSuccessStatusCode)
+            response.EnsureSuccessStatusCode();
+
+            var auth = (AuthenticacionService)AuthenticationStateProvider;
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginDtoResponse>();
+
+            if (loginResponse!.Exito == false)
             {
-                var auth = (AuthenticacionService)AuthenticationStateProvider;
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginDtoResponse>();
-
-                await auth.Autenticar(loginResponse);
-
-                NavigationManager.NavigateTo("/");
+                ToastService.ShowWarning(loginResponse.MensajeError!);
             }
             else
             {
-                Console.WriteLine(response.Content.ToString());
+                await auth.Autenticar(loginResponse);
+                NavigationManager.NavigateTo("/");
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            ToastService.ShowError(ex.Message);
         }
     }
 

@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security;
 using System.Security.Claims;
 using System.Text;
+using ECommerceWeb.Shared;
 
 namespace ECommerceWeb.Server.Services;
 
@@ -85,6 +86,50 @@ public class UserService : IUserService
         {
             response.MensajeError = "Error inesperado";
             _logger.LogError(ex, "Error al autenticar {Message}", ex.Message);
+        }
+
+        return response;
+    }
+
+    public async Task<BaseResponse> RegisterAsync(RegistrarUsuarioDto request)
+    {
+        var response = new BaseResponse();
+
+        try
+        {
+            var identity = new IdentityUserECommerce
+            {
+                NombreCompleto = request.NombreCompleto,
+                FechaNacimiento = request.FechaNacimiento,
+                Direccion = request.Direccion,
+                UserName = request.NombreUsuario,
+                Email = request.Email,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(identity, request.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(identity, Constantes.RolCliente);
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                foreach (var identityError in result.Errors)
+                {
+                    sb.AppendFormat("{0} ", identityError.Description);
+                }
+
+                response.MensajeError = sb.ToString();
+                sb.Clear();
+            }
+
+            response.Exito = result.Succeeded;
+        }
+        catch (Exception ex)
+        {
+            response.MensajeError = "Error al registrar";
+            _logger.LogWarning(ex, "{MensajeError} {Message}", response.MensajeError, ex.Message);
         }
 
         return response;

@@ -20,6 +20,14 @@ public class UsuariosController : ControllerBase
     {
         var response = await _service.LoginAsync(request);
 
-        return response.Exito ? Ok(response) : Unauthorized(response);
+        return Ok(response);
+    }
+
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register([FromBody] RegistrarUsuarioDto request)
+    {
+        var response = await _service.RegisterAsync(request);
+
+        return Ok(response);
     }
 }

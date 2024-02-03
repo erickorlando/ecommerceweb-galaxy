@@ -1,4 +1,5 @@
 using Blazored.SessionStorage;
+using Blazored.Toast;
 using ECommerceWeb.Client;
 using ECommerceWeb.Client.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,6 +14,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddBlazoredToast();
 
 // Habilitamos el contexto de seguridad de Blazor
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticacionService>();

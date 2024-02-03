@@ -1,6 +1,7 @@
 ﻿@page "/productos/crear"
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = Constantes.RolAdministrador)]
 
 @if (Categorias != null && Marcas != null)
 {
