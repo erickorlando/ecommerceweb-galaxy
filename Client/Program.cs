@@ -1,5 +1,6 @@
 using Blazored.SessionStorage;
 using Blazored.Toast;
+using CurrieTechnologies.Razor.SweetAlert2;
 using ECommerceWeb.Client;
 using ECommerceWeb.Client.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +16,8 @@ builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(build
 
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredToast();
+
+builder.Services.AddSweetAlert2();
 
 // Habilitamos el contexto de seguridad de Blazor
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticacionService>();

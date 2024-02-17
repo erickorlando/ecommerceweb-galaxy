@@ -1,17 +1,15 @@
 ﻿@inherits LayoutComponentBase
 <BlazoredToasts />
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+<div>
+    <NavMenu />
 </div>
+<div class="container-fluid content position-relative h-100">
+    @Body
+</div>
+<footer class="border-top footer">
+    <div class="container d-none d-lg-block">
+        <label>© 2024 - Galaxy Training <i class="bi bi-heart-fill"></i></label>
+        <NavLink class="text-dark" href="https://galaxy.edu.pe" target="_blank">Saber más</NavLink>
+    </div>
+</footer>

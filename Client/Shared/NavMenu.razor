@@ -1,61 +1,64 @@
 ﻿@using ECommerceWeb.Client.Auth
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject SweetAlertService Swal
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">ECommerceWeb</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Inicio
+<header>
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+            <NavLink class="navbar-brand" href="/">
+                <img src="assets/images/galaxy-training-logo.png" alt="Galaxy Store" />
             </NavLink>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navegacion" aria-controls="navegacion" aria-expanded="false" aria-label="Alternar navegacion">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="marcas/list">
-                <span class="oi oi-plus" aria-hidden="true"></span> Marcas
-            </NavLink>
+        <div class="collapse navbar-collapse" id="navegacion">
+            <ul class="navbar-nav me-auto mb-2">
+                <li class="nav-item">
+                    <NavLink class="nav-link text-white" href="/">Inicio</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link text-white" href="categorias/list">Categorias</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link text-white" href="marcas/list">Marcas</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link text-white" href="productos/list">Productos</NavLink>
+                </li>
+                <AuthorizeView Roles="@Constantes.RolAdministrador">
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link text-white" href="dashboard">Dashboard</NavLink>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="categorias/list">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Categorias
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productos/list">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Productos
-            </NavLink>
-        </div>
-        <AuthorizeView>
-            <Authorized>
-                <NavLink class="navbar-text text-white">
-                    <i class="oi oi-person"></i>@context.User.Identity!.Name
-                </NavLink>
-                <button class="btn btn-outline-info" @onclick="CerrarSesion"><i class="oi oi-fullscreen-exit me-1"></i>Salir</button>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="login">
-                        <span class="oi oi-person" aria-hidden="true"></span> Iniciar Sesion
+        <a class="btn btn-outline-info ms-auto me-3" href="carrito">
+            <i class="bi bi-cart me-1"></i>
+            Carrito
+            <span class="badge bg-info text-white rounded-pill">0</span>
+        </a>
+        <div>
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="navbar-text text-white">
+                        <i class="bi bi-person-fill me-1"></i>@context.User.Identity!.Name
                     </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="register">
-                        <span class="oi oi-circle-check" aria-hidden="true"></span> Registrarse
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-       
+                    <button class="btn btn-outline-info" @onclick="CerrarSesion"><i class="bi bi-door-open me-1"></i>Salir</button>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="btn btn-outline-info" href="login"><i class="bi bi-arrow-right-circle me-1"></i>Ingresar</NavLink>
+                    <NavLink class="btn btn-outline-info" href="register"><i class="bi bi-person-fill-add me-1"></i>Registrarse</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
     </nav>
-</div>
+</header>
+
 
 @code {
     private bool collapseNavMenu = true;
@@ -69,8 +72,21 @@
 
     private async Task CerrarSesion()
     {
-        var auth = (AuthenticacionService)AuthenticationStateProvider;
-        await auth.Autenticar(null);
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Desea salir?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Si",
+                CancelButtonText = "Por ahora no"
+            });
+
+        if (result.IsConfirmed)
+        {
+            var auth = (AuthenticacionService)AuthenticationStateProvider;
+            await auth.Autenticar(null);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+
     }
 }
