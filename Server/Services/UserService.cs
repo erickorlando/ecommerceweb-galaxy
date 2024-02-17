@@ -52,6 +52,7 @@ public class UserService : IUserService
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, identity.NombreCompleto),
+                new Claim(ClaimTypes.Email, identity.Email!),
                 new Claim(ClaimTypes.Expiration, fechaExpiracion.ToString("yyyy-MM-dd HH:mm:ss")),
             };
 

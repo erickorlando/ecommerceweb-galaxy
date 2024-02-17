@@ -14,7 +14,7 @@ namespace ECommerceWeb.Repositories.Implementaciones
 
         public async Task<Cliente?> BuscarPorEmailAsync(string email)
         {
-            return await Context.Set<Cliente>().FirstOrDefaultAsync(o => o.Email.Equals(email)));
+            return await Context.Set<Cliente>().FirstOrDefaultAsync(o => o.Email.Equals(email));
         }
     }
 }

@@ -1,8 +1,70 @@
 ﻿@page "/"
-@attribute [Authorize]
+@inject HttpClient HttpClient
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Inicio</PageTitle>
 
-<h1>Hola Alumnos de Galaxy!</h1>
+<h1>Escoge tu mejor opcion</h1>
+<div>
+    <div class="row justify-content-center mt-3 mb-4">
+        <div class="col-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar producto" @bind-value="Buscar" />
+                <button class="btn btn-secondary" @onclick="ObtenerCatalogo">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@if (Productos is not null)
+{
+    <div class="container mb-5 gap-5">
+        <div class="row gx-4 row-cols-1 row-cols-md-3 row-cols-xl-5 justify-content-center">
+            @foreach (var producto in Productos)
+            {
+                <ProductCard Producto="producto" OnClick="VerDetalle" />
+            }
+        </div>
+    </div>
+}
 
+<LoadingComponent IsLoading="IsLoading" />
+
+@code {
+    public ICollection<ProductoDtoResponse>? Productos { get; set; }
+
+    public string Buscar { get; set; } = default!;
+
+    public bool IsLoading { get; set; }
+
+    private async Task ObtenerCatalogo()
+    {
+        try
+        {
+            IsLoading = true;
+
+            Productos = await HttpClient.GetFromJsonAsync<ICollection<ProductoDtoResponse>>($"api/Productos?filtro={Buscar}");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerCatalogo();
+    }
+
+    private void VerDetalle(int id)
+    {
+        NavigationManager.NavigateTo($"/detalle/{id}");
+    }
+}

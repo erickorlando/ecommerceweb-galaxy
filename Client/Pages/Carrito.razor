@@ -1,0 +1,63 @@
+﻿@page "/carrito"
+@inject HttpClient HttpClient
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = Constantes.RolCliente)]
+
+<h3>Carrito</h3>
+
+<p>Simulacion de venta</p>
+
+<button class="btn btn-success" @onclick="ProcesarPago">Comprar</button>
+
+<LoadingComponent IsLoading="IsLoading" />
+
+@code {
+
+    public bool IsLoading { get; set; }
+
+    private async Task ProcesarPago()
+    {
+        try
+        {
+            IsLoading = true;
+            var dto = new VentaDto();
+
+            dto.VentaDetalles.Add(new VentaDetalleDto
+            {
+                ProductoId = 1,
+                Cantidad = 1,
+                Precio = 20
+            });
+
+            dto.VentaDetalles.Add(new VentaDetalleDto
+            {
+                ProductoId = 2,
+                Cantidad = 4,
+                Precio = 200
+            });
+
+            dto.Total = dto.VentaDetalles.Sum(i => i.Cantidad * i.Precio);
+
+            var response = await HttpClient.PostAsJsonAsync("api/Ventas", dto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ToastService.ShowSuccess("Venta registrada con exito");
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        catch(Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+
+        
+    }
+
+}

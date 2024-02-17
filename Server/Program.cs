@@ -3,6 +3,7 @@ using ECommerceWeb.DataAccess;
 using ECommerceWeb.DataAccess.Data;
 using ECommerceWeb.Repositories.Implementaciones;
 using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Server.Perfiles;
 using ECommerceWeb.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -17,8 +18,15 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<IMarcaRepository, MarcaRepository>();
 builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
+builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
+builder.Services.AddTransient<IVentaRepository, VentaRepository>();
 
 builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<VentaProfile>();
+});
 
 builder.Services.AddDbContext<ECommerceDbContext>(options =>
 {
