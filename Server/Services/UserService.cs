@@ -8,6 +8,8 @@ using System.Security;
 using System.Security.Claims;
 using System.Text;
 using ECommerceWeb.Shared;
+using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Entities;
 
 namespace ECommerceWeb.Server.Services;
 
@@ -16,12 +18,14 @@ public class UserService : IUserService
     private readonly IConfiguration _configuration;
     private readonly UserManager<IdentityUserECommerce> _userManager;
     private readonly ILogger<UserService> _logger;
+    private readonly IClienteRepository _clienteRepository;
 
-    public UserService(IConfiguration configuration, UserManager<IdentityUserECommerce> userManager, ILogger<UserService> logger)
+    public UserService(IConfiguration configuration, UserManager<IdentityUserECommerce> userManager, ILogger<UserService> logger, IClienteRepository clienteRepository)
     {
         _configuration = configuration;
         _userManager = userManager;
         _logger = logger;
+        _clienteRepository = clienteRepository;
     }
 
     public async Task<LoginDtoResponse> LoginAsync(LoginDtoRequest request)
@@ -111,6 +115,17 @@ public class UserService : IUserService
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(identity, Constantes.RolCliente);
+
+                var cliente = new Cliente
+                {
+                    Nombres = request.NombreCompleto.Split(" ", StringSplitOptions.RemoveEmptyEntries).First(),
+                    Apellidos = request.NombreCompleto.Split(" ", StringSplitOptions.RemoveEmptyEntries).Last(),
+                    Email = request.Email,
+                    FechaNacimiento = request.FechaNacimiento,
+                    TipoClienteId = 1
+                };
+
+                await _clienteRepository.AddAsync(cliente);
             }
             else
             {
