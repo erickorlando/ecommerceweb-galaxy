@@ -8,7 +8,6 @@ namespace ECommerceWeb.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class CategoriasController : ControllerBase
 {
     private readonly ICategoriaRepository _repository;
@@ -26,6 +25,8 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
+
     public async Task<IActionResult> Post(CategoriaDto request)
     {
 
@@ -50,6 +51,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> Put(int id, CategoriaDto request)
     {
         var categoria = await _repository.FindAsync(id);
@@ -64,6 +66,8 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
+
     public async Task<IActionResult> Delete(int id)
     {
         await _repository.DeleteAsync(id);

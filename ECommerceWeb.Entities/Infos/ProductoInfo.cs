@@ -8,5 +8,6 @@ public class ProductoInfo
     public float PrecioUnitario { get; set; }
     public string Marca { get; set; } = default!;
     public string Categoria { get; set; } = default!;
+    public int CategoriaId { get; set; }
     public string? UrlImagen { get; set; }
 }

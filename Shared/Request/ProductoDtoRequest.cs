@@ -21,4 +21,7 @@ public class ProductoDtoRequest
     public int CategoriaId { get; set; }
 
     public string? UrlImagen { get; set; }
+
+    public string? Base64Imagen { get; set; }
+    public string? NombreArchivo { get; set; }
 }

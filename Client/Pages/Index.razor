@@ -16,14 +16,32 @@
                 </button>
             </div>
         </div>
+        <div class="col-3">
+            @if (Categorias is not null)
+            {
+                <select class="form-select" @onchange="OnSelectionChange">
+                    <option>-Categoria-</option>
+                    @foreach (var categoria in Categorias)
+                    {
+                        <option value="@categoria.Id">@categoria.Nombre</option>
+                    }
+                </select>
+            }
+        </div>
     </div>
 </div>
 
 @if (Productos is not null)
 {
+    var filter = Productos;
+    if (CategoriaSeleccionada is {} catSeleccionado) // pattern matching
+    {
+        filter = Productos.Where(p => p.CategoriaId == catSeleccionado).ToList();
+    }
+
     <div class="container mb-5 gap-5">
         <div class="row gx-4 row-cols-1 row-cols-md-3 row-cols-xl-5 justify-content-center">
-            @foreach (var producto in Productos)
+            @foreach (var producto in filter)
             {
                 <ProductCard Producto="producto" OnClick="VerDetalle" />
             }
@@ -36,9 +54,25 @@
 @code {
     public ICollection<ProductoDtoResponse>? Productos { get; set; }
 
+    public ICollection<CategoriaDto>? Categorias { get; set; }
+
+    private int? CategoriaSeleccionada { get; set; }
+
     public string Buscar { get; set; } = default!;
 
     public bool IsLoading { get; set; }
+
+    private void OnSelectionChange(ChangeEventArgs args)
+    {
+        if (args.Value!.ToString()!.Contains("-"))
+        {
+            CategoriaSeleccionada = null;
+        }
+        else
+        {
+            CategoriaSeleccionada = int.Parse(args.Value.ToString()!);
+        }
+    }
 
     private async Task ObtenerCatalogo()
     {
@@ -61,6 +95,12 @@
     protected override async Task OnInitializedAsync()
     {
         await ObtenerCatalogo();
+
+        var response = await HttpClient.GetFromJsonAsync<ICollection<CategoriaDto>>("api/Categorias");
+        if (response is not null)
+        {
+            Categorias = response;
+        }
     }
 
     private void VerDetalle(int id)

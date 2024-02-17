@@ -1,4 +1,6 @@
-﻿<h3>@Titulo</h3>
+﻿@inject IToastService ToastService
+
+<h3>@Titulo</h3>
 
 <EditForm Model="Request" OnValidSubmit="Grabar">
     <DataAnnotationsValidator />
@@ -38,6 +40,27 @@
                         <option value="@item.Id">@item.Nombre</option>
                     }
                 </InputSelect>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    @if (Request.Base64Imagen is not null)
+                    {
+                        <div style="margin: 10px">
+                            <img src="data:image/jpeg;base64, @Request.Base64Imagen" alt="@Request.Nombre" style="width:400px" />
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="@Request.UrlImagen" alt="@Request.Nombre" style="width: 400px" />
+                    }
+                </div>
+                <div class="card-footer">
+                    <InputFile accept="image/png, image/jpeg, image/webp" style="display: none" 
+                    OnChange="OnFileUploaded" id="file" />
+                    <label for="file" class="btn btn-secondary"><i class="bi bi-camera me-1"></i>IMAGEN</label>
+                </div>
             </div>
         </div>
     </div>
@@ -85,4 +108,21 @@
         TextoBoton = Request.Id == 0 ? "Crear" : "Actualizar";
     }
 
+    private async Task OnFileUploaded(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var imagen = e.File;
+            var buffer = new byte[imagen.Size];
+            var _ = await imagen.OpenReadStream().ReadAsync(buffer); // Extrae el base64
+
+            Request.Base64Imagen = Convert.ToBase64String(buffer);
+            Request.NombreArchivo = imagen.Name;
+            Request.UrlImagen = null;
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
 }

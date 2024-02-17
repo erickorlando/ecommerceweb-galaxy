@@ -1,5 +1,6 @@
 ﻿using ECommerceWeb.Entities;
 using ECommerceWeb.Repositories.Interfaces;
+using ECommerceWeb.Server.Services;
 using ECommerceWeb.Shared.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace ECommerceWeb.Server.Controllers;
 public class ProductosController : ControllerBase
 {
     private readonly IProductoRepository _repository;
+    private readonly IFileUploader _fileUploader;
 
-    public ProductosController(IProductoRepository repository)
+    public ProductosController(IProductoRepository repository, IFileUploader fileUploader)
     {
         _repository = repository;
+        _fileUploader = fileUploader;
     }
 
     // GET: api/productos
@@ -40,7 +43,8 @@ public class ProductosController : ControllerBase
             Descripcion = registro.Descripcion,
             PrecioUnitario = registro.PrecioUnitario,
             CategoriaId = registro.CategoriaId,
-            MarcaId = registro.MarcaId
+            MarcaId = registro.MarcaId,
+            UrlImagen = registro.UrlImagen
         };
 
         return Ok(response);
@@ -57,6 +61,8 @@ public class ProductosController : ControllerBase
             MarcaId = request.MarcaId,
             CategoriaId = request.CategoriaId
         };
+
+        producto.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
 
         await _repository.AddAsync(producto);
 
@@ -77,6 +83,11 @@ public class ProductosController : ControllerBase
         registro.PrecioUnitario = request.PrecioUnitario;
         registro.MarcaId = request.MarcaId;
         registro.CategoriaId = request.CategoriaId;
+
+        if (!string.IsNullOrWhiteSpace(request.Base64Imagen))
+        {
+            registro.UrlImagen = await _fileUploader.UploadFileAsync(request.Base64Imagen, request.NombreArchivo);
+        }
 
         await _repository.UpdateAsync();
 

@@ -31,5 +31,9 @@
     <ProjectReference Include="..\ECommerceWeb.Repositories\ECommerceWeb.Repositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 
 </Project>

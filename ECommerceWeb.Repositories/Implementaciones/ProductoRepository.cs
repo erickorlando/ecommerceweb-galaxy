@@ -31,8 +31,10 @@ public class ProductoRepository : RepositoryBase<Producto>, IProductoRepository
                 Nombre = x.Nombre,
                 Descripcion = x.Descripcion,
                 Categoria = x.Categoria.Nombre,
+                CategoriaId = x.CategoriaId,
                 Marca = x.Marca.Nombre,
-                PrecioUnitario = x.PrecioUnitario
+                PrecioUnitario = x.PrecioUnitario,
+                UrlImagen = x.UrlImagen 
             })
             .AsNoTracking()
             .ToListAsync();

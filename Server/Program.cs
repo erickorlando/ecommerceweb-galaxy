@@ -22,6 +22,7 @@ builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
 builder.Services.AddTransient<IVentaRepository, VentaRepository>();
 
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IFileUploader, FileUploader>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
